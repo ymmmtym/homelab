@@ -1,0 +1,14 @@
+machine:
+  kubelet:
+    nodeIP:
+      validSubnets:
+%{ for subnet in subnets ~}
+        - ${subnet}
+%{ endfor ~}
+  install:
+    disk: /dev/sda
+  time:
+    servers:
+      - /dev/ptp0
+  nodeLabels:
+    CriticalAddonsOnly: true
