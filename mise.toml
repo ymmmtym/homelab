@@ -1,0 +1,3 @@
+[tools]
+talosctl = "latest"
+terraform = "latest"
