@@ -1,0 +1,40 @@
+version: '3'
+
+vars:
+  TALOSCONFIG: ./talosconfig
+
+tasks:
+  talosconfig:get:
+    aliases:
+      - tc
+    cmds:
+      - terraform output -json talosconfig | yq '.talos_config' > {{.TALOSCONFIG}}
+    sources:
+      - ./*.tf
+    generates:
+      - "{{.TALOSCONFIG}}"
+    method: timestamp
+  kubeconfig:update:
+    aliases:
+      - kc
+      - kubeconfig
+    deps:
+      - talosconfig:get
+    cmds:
+      - talosctl config endpoints "{{.CONTROL_PLANE_IP}}"
+      - talosctl kubeconfig --nodes "{{.CONTROL_PLANE_IP}}"
+    env:
+      TALOSCONFIG: "{{.TALOSCONFIG}}"
+    vars:
+      CONTROL_PLANE_IP:
+        sh: yq eval '.contexts.cluster.endpoints[0]' {{.TALOSCONFIG}}
+  terraform:taint:vms:
+    aliases:
+      - taint
+    cmds:
+      - terraform state list | grep 'proxmox_virtual_environment_vm.talos' | xargs -n1 terraform taint
+  terraform:untaint:vms:
+    aliases:
+      - untaint
+    cmds:
+      - terraform state list | grep 'proxmox_virtual_environment_vm.talos' | xargs -n1 terraform untaint
