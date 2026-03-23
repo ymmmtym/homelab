@@ -1,0 +1,29 @@
+machine:
+  kubelet:
+    nodeIP:
+      validSubnets:
+%{ for subnet in subnets ~}
+        - ${subnet}
+%{ endfor ~}
+  install:
+    disk: /dev/sda
+  time:
+    servers:
+      - /dev/ptp0
+  nodeLabels:
+    CriticalAddonsOnly: true
+%{ if type == "controlplane" ~}
+
+cluster:
+  allowSchedulingOnControlPlanes: true
+  network:
+    cni:
+      name: none
+  proxy:
+    disabled: true
+  etcd:
+    advertisedSubnets:
+%{ for subnet in subnets ~}
+      - ${subnet}
+%{ endfor ~}
+%{ endif ~}
