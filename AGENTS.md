@@ -40,4 +40,5 @@ task untaint                    # untaint all VMs
 
 ## References
 
-See `CLAUDE.md` for detailed project conventions, design philosophy, and VM specifications.
+- `talos-config/` - Talos machine config templates and cluster specifications
+- `main.tf` - Network bridge/VLAN setup details and VM resource definitions
