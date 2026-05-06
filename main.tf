@@ -17,6 +17,8 @@ provider "proxmox" {
   insecure = var.virtual_environment_insecure
 }
 
+provider "talos" {}
+
 data "proxmox_virtual_environment_node" "this" {
   node_name = local.node_name
 }
@@ -61,8 +63,7 @@ resource "proxmox_virtual_environment_network_linux_vlan" "this" {
 # talos
 #
 
-# provider "talos" {}
-# 
+#
 # locals {
 #   controlplane_ips = [for i in range(11, 14) : cidrhost(local.subnet_cidr, i)]
 #   worker_ips       = [for i in range(14, 17) : cidrhost(local.subnet_cidr, i)]
