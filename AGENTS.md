@@ -38,6 +38,3 @@ task untaint                    # untaint all VMs
 - VLAN 100 (vmbr100) isolates management network
 - Flux GitOps repo: `https://github.com/ymmmtym/flux` (branch: main)
 
-## References
-
-See `CLAUDE.md` for detailed project conventions, design philosophy, and VM specifications.
