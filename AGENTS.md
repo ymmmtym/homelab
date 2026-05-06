@@ -40,6 +40,17 @@ Proxmox VE 上の Talos Linux クラスタを Terraform で管理するインフ
 - クラスタのIPアドレス・MACアドレスを外部公開しない
 - 重要な判断を独断で進めない。必ず確認を求める
 
+## Secrets
+
+`mise.local.toml.example` を `mise.local.toml` にコピーし、以下の環境変数を設定します。
+
+| Variable | Description |
+|---|---|
+| `PROXMOX_VE_API_TOKEN_ID` | Proxmox API token ID (e.g., `root@pam!terraform`) |
+| `PROXMOX_VE_API_TOKEN_SECRET` | Proxmox API token secret |
+
+`mise.local.toml` は gitignore 済みです。シークレットは絶対にコミットしないでください。
+
 ## Workflow
 
 - 変更前に既存ファイルの内容を確認する
