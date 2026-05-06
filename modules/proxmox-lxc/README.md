@@ -79,8 +79,6 @@ module "gpu_container" {
   
   # GPU Passthrough (Intel iGPU example)
   mount_points = [{
-    key    = "0"
-    slot   = 0
     volume = "/dev/dri/renderD128"
     mp     = "/dev/dri/renderD128"
   }]
