@@ -28,8 +28,8 @@ Proxmox VE 上の Talos Linux クラスタを Terraform で管理するインフ
 ## Boundaries
 
 - `.env*` ファイルを変更・コミットしない
-- `02_finance/` 内の金額情報を外部出力に含めない
-- クライアント名・契約内容を output/ 以下のファイルに記載しない
+- Terraform state ファイルをコミットしない
+- クラスタのIPアドレス・MACアドレスを外部公開しない
 - 重要な判断を独断で進めない。必ず確認を求める
 
 ## Workflow
