@@ -285,7 +285,7 @@ resource "proxmox_virtual_environment_network_linux_vlan" "this" {
 #   initialization {
 #     user_account {
 #       username = "ubuntu"
-#       password = "ubuntu"
+#       keys     = var.ubuntu_ssh_keys
 #     }
 #     ip_config {
 #       ipv4 {
