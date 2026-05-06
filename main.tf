@@ -43,19 +43,7 @@ resource "proxmox_virtual_environment_network_linux_vlan" "this" {
   interface = var.physical_interface
 }
 
-#
-# VM
-#
 
-# module "talos_vms" {
-#   source = "./modules/proxmox-vm"
-# 
-#   node_name            = local.node_name
-#   vm_count             = 6
-#   subnet_cidr          = local.subnet_cidr
-#   talos_image_url      = local.talos_image_url
-#   talos_image_filename = "talos-v1.10.6-amd64.raw"
-# }
 
 #
 # talos
