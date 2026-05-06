@@ -56,14 +56,24 @@ variable "network_bridges" {
   default     = ["vmbr0", "vmbr100"]
 }
 
+variable "ip_configs" {
+  type = list(object({
+    ipv4_address = string
+    ipv4_gateway = optional(string)
+  }))
+  description = "IP configurations per network interface (one entry per interface)"
+  default     = []
+}
+
 variable "subnet_cidr" {
   type        = string
-  description = "Subnet CIDR for IP assignment"
+  description = "Subnet CIDR for IP assignment (legacy, use ip_configs instead)"
+  default     = ""
 }
 
 variable "ip_offset" {
   type        = number
-  description = "IP offset from subnet base"
+  description = "IP offset from subnet base (legacy, use ip_configs instead)"
   default     = 11
 }
 

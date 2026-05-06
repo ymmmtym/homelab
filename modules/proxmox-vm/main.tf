@@ -53,14 +53,15 @@ resource "proxmox_virtual_environment_vm" "this" {
   }
 
   initialization {
-    ip_config {
-      ipv4 {
-        address = "dhcp"
-      }
-    }
-    ip_config {
-      ipv4 {
-        address = format("%s/%s", cidrhost(var.subnet_cidr, count.index + var.ip_offset), split("/", var.subnet_cidr)[1])
+    dynamic "ip_config" {
+      for_each = var.network_bridges
+      content {
+        ipv4 {
+          address = ip_config.key < length(var.ip_configs) ? var.ip_configs[ip_config.key].ipv4_address : (
+            ip_config.key == 0 ? "dhcp" : format("%s/%s", cidrhost(var.subnet_cidr, count.index + var.ip_offset), split("/", var.subnet_cidr)[1])
+          )
+          gateway = ip_config.key < length(var.ip_configs) ? try(var.ip_configs[ip_config.key].ipv4_gateway, null) : null
+        }
       }
     }
   }
