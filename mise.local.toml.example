@@ -1,0 +1,10 @@
+# mise.local.toml - Local environment configuration (DO NOT COMMIT)
+# Copy this file to mise.local.toml and replace placeholder values with your actual secrets.
+#
+# Required environment variables for Proxmox Terraform provider:
+# - PROXMOX_VE_API_TOKEN_ID: Proxmox API token ID (e.g., "root@pam!terraform")
+# - PROXMOX_VE_API_TOKEN_SECRET: Proxmox API token secret
+
+[env]
+PROXMOX_VE_API_TOKEN_ID = "YOUR_API_TOKEN_ID"
+PROXMOX_VE_API_TOKEN_SECRET = "YOUR_API_TOKEN_SECRET"
