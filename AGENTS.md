@@ -20,6 +20,17 @@ task untaint                    # untaint all VMs
 - `TF_CLI_ARGS_plan` and `TF_CLI_ARGS_apply` set parallelism to 10000
 - Terraform Cloud remote backend manages state
 
+## Secrets
+
+Copy `mise.local.toml.example` to `mise.local.toml` and set the following environment variables:
+
+| Variable | Description |
+|---|---|
+| `PROXMOX_VE_API_TOKEN_ID` | Proxmox API token ID (e.g., `root@pam!terraform`) |
+| `PROXMOX_VE_API_TOKEN_SECRET` | Proxmox API token secret |
+
+`mise.local.toml` is gitignored. Never commit secrets.
+
 ## Architecture
 
 - `main.tf` - Active: network bridge/VLAN setup. Most resources commented out (see lines 50-335 for reference)
