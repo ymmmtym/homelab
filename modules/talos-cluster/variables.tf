@@ -27,3 +27,9 @@ variable "subnets" {
   type        = list(string)
   description = "Subnets for Talos configuration"
 }
+
+variable "ntp_servers" {
+  type        = list(string)
+  default     = ["pool.ntp.org"]
+  description = "NTP servers for time synchronization (fallback for PTP)"
+}

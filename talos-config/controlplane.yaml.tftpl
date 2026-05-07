@@ -10,6 +10,9 @@ machine:
   time:
     servers:
       - /dev/ptp0
+%{ for ntp in ntp_servers ~}
+      - ${ntp}
+%{ endfor ~}
   nodeLabels:
     CriticalAddonsOnly: true
 
