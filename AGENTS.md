@@ -7,22 +7,30 @@ Proxmox VE 上の Talos Linux クラスタを Terraform で管理するインフ
 
 ## Directory Structure
 
-| ディレクトリ            | 役割                                   |
-| ----------------- | ------------------------------------ |
-| `modules/`        | Terraform モジュール（VM/LXC/Talos クラスタ）      |
-| `talos-config/`   | Talos マシン設定テンプレート・クラスター仕様             |
-| `main.tf`         | アクティブ: ネットワークブリッジ/VLAN 設定            |
+| ディレクトリ                 | 役割                                   |
+| ---------------------- | ------------------------------------ |
+| `modules/proxmox-vm/`  | Proxmox VM 作成 Terraform モジュール          |
+| `modules/proxmox-lxc/` | Proxmox LXC 作成 Terraform モジュール         |
+| `modules/talos-cluster/` | Talos クラスタ設定 Terraform モジュール         |
+| `talos-config/`        | Talos マシン設定テンプレート（controlplane/worker） |
+| `main.tf`              | ルート: プロバイダ設定・リソース定義                  |
+| `Taskfile.yml`         | Taskfile: talosconfig/kubeconfig 操作   |
 
 ## Commands
 
-- Lint Markdown: `npx markdownlint-cli2 "**/*.md"`
-- Search content: `grep -r "keyword" output/`
-- Run Test: `bun test`
+- Terraform Init: `terraform init`
+- Terraform Validate: `terraform validate`
+- Terraform Format: `terraform fmt -recursive`
+- Terraform Plan: `terraform plan`
+- Terraform Apply: `terraform apply`
+- Get Talosconfig: `task talosconfig:get`（または `task tc`）
+- Update Kubeconfig: `task kubeconfig:update`（または `task kc`）
 
 ## Code Style
 
-- ファイル名: `[YYYYMMDD]-[topic].md` 形式
-- 見出し: `##` から開始、`#` はファイルタイトルのみ
+- Terraform: `terraform fmt` に準拠
+- 変数名: スネークケース（`control_plane_ip`）
+- リソース名: `module名_リソース種別` の形式
 - 言語: 日本語。です/ます調で統一
 
 ## Boundaries
