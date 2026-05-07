@@ -1,43 +1,53 @@
 # AGENTS.md
 
+## Project Overview
+
+Proxmox VE 上の Talos Linux クラスタを Terraform で管理するインフラリポジトリ。
+ネットワーク分離（VLAN 100）と GitOps（Flux）による自動化を実現する。
+
+## Directory Structure
+
+| ディレクトリ                 | 役割                                   |
+| ---------------------- | ------------------------------------ |
+| `modules/proxmox-vm/`  | Proxmox VM 作成 Terraform モジュール          |
+| `modules/proxmox-lxc/` | Proxmox LXC 作成 Terraform モジュール         |
+| `modules/talos-cluster/` | Talos クラスタ設定 Terraform モジュール         |
+| `talos-config/`        | Talos マシン設定テンプレート（controlplane/worker） |
+| `main.tf`              | ルート: プロバイダ設定・リソース定義                  |
+| `Taskfile.yml`         | Taskfile: talosconfig/kubeconfig 操作   |
+
 ## Commands
 
-```bash
-mise install                    # install tools (terraform, talosctl, flux2)
-terraform init                  # initialize Terraform
-terraform plan                  # plan changes
-terraform apply                 # apply changes
+- Terraform Init: `terraform init`
+- Terraform Validate: `terraform validate`
+- Terraform Format: `terraform fmt -recursive`
+- Terraform Plan: `terraform plan`
+- Terraform Apply: `terraform apply`
+- Get Talosconfig: `task talosconfig:get`（または `task tc`）
+- Update Kubeconfig: `task kubeconfig:update`（または `task kc`）
 
-task tc                         # generate ./talosconfig from terraform output
-task kc                         # update kubeconfig (depends on tc)
-task taint                      # taint all VMs
-task untaint                    # untaint all VMs
-```
+## Code Style
 
-## Environment
+- Terraform: `terraform fmt` に準拠
+- 変数名: スネークケース（`control_plane_ip`）
+- リソース名: `module名_リソース種別` の形式
+- 言語: 日本語。です/ます調で統一
 
-- `TALOSCONFIG=./talosconfig` is set via mise.toml
-- `TF_CLI_ARGS_plan` and `TF_CLI_ARGS_apply` set parallelism to 10000
-- Terraform Cloud remote backend manages state
+## Boundaries
 
-## Architecture
+- `.env*` ファイルを変更・コミットしない
+- Terraform state ファイルをコミットしない
+- クラスタのIPアドレス・MACアドレスを外部公開しない
+- 重要な判断を独断で進めない。必ず確認を求める
 
-- `main.tf` - Active: network bridge/VLAN setup. Most resources commented out (see lines 50-335 for reference)
-- `modules/proxmox-vm/` - VM creation module (currently unused)
-- `modules/talos-cluster/` - Talos/Kubernetes module (currently unused)
-- `modules/proxmox-lxc/` - LXC container module (currently unused)
-- `talos-config/` - Talos machine config templates
+## Workflow
 
-## Important
+- 変更前に既存ファイルの内容を確認する
+- 長時間タスクはステップ分割し、各完了後にファイル保存
+- 説明には必ず具体例を含める
 
-- `task kc` requires `task tc` to run first (writes ./talosconfig)
-- `talosconfig` is generated from `terraform output`, not static
-- `proxmox_virtual_environment_vm` changes affect all 6 VMs
-- `talos_machine_configuration_apply` depends on VM changes via lifecycle
-- VM tags: `["terraform", "talos"]`
-- VLAN 100 (vmbr100) isolates management network
-- Flux GitOps repo: `https://github.com/ymmmtym/flux` (branch: main)
+### Git
 
-## References
-
-See `CLAUDE.md` for detailed project conventions, design philosophy, and VM specifications.
+- ブランチ戦略は Github-flow にする
+	- main ブランチ
+	- feature/XXX ブランチ
