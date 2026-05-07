@@ -29,9 +29,10 @@ resource "talos_machine_configuration_apply" "controlplane" {
   node                        = each.value
   config_patches = [
     templatefile("${path.root}/talos-config/default.yaml.tftpl", {
-      hostname = var.controlplane_hostnames[each.key]
-      subnets  = var.subnets
-      type     = "controlplane"
+      hostname    = var.controlplane_hostnames[each.key]
+      subnets     = var.subnets
+      type        = "controlplane"
+      ntp_servers = var.ntp_servers
     })
   ]
 }
@@ -44,9 +45,10 @@ resource "talos_machine_configuration_apply" "worker" {
   node                        = each.value
   config_patches = [
     templatefile("${path.root}/talos-config/default.yaml.tftpl", {
-      hostname = var.worker_hostnames[each.key]
-      subnets  = var.subnets
-      type     = "worker"
+      hostname    = var.worker_hostnames[each.key]
+      subnets     = var.subnets
+      type        = "worker"
+      ntp_servers = var.ntp_servers
     })
   ]
 }
