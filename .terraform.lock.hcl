@@ -3,7 +3,7 @@
 
 provider "registry.terraform.io/bpg/proxmox" {
   version     = "0.88.0"
-  constraints = "~> 0.81"
+  constraints = "~> 0.88"
   hashes = [
     "h1:C6z/uZoHy0pZwRhf/0U+9Otsxs8KXuuWvoGASB7HzYw=",
     "zh:022749d9e02050da10e3a10729fddbff26a1eaaf4331261ef43dcd4a67420145",
@@ -26,7 +26,7 @@ provider "registry.terraform.io/bpg/proxmox" {
 
 provider "registry.terraform.io/siderolabs/talos" {
   version     = "0.9.0"
-  constraints = "~> 0.8"
+  constraints = "~> 0.9"
   hashes = [
     "h1:50TaymX/KnjXcURmpKsVd7JUyLRrMDNXMHFgqzSe88U=",
     "zh:0fa82a384b25a58b65523e0ea4768fa1212b1f5cfc0c9379d31162454fedcc9d",
