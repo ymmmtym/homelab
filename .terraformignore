@@ -1,0 +1,14 @@
+.git/
+.gitignore
+.terraformignore
+*.md
+test/
+tests/
+examples/
+docs/
+.editorconfig
+*.swp
+*.swo
+*~
+.DS_Store
+.thumbs
