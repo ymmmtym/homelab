@@ -101,9 +101,11 @@ resource "proxmox_virtual_environment_network_linux_vlan" "this" {
 #   kubernetes = {
 #     host = module.talos_cluster.kubeconfig.kubernetes_client_configuration.host
 # 
-#     client_certificate     = module.talos_cluster.kubeconfig.kubernetes_client_configuration.client_certificate
-#     client_key             = module.talos_cluster.kubeconfig.kubernetes_client_configuration.client_key
-#     cluster_ca_certificate = module.talos_cluster.kubeconfig.kubernetes_client_configuration.ca_certificate
+#     # talos_cluster_kubeconfig の証明書類は base64 エンコードされているため、
+#     # Helm provider に渡す前に base64decode で PEM に変換する
+#     client_certificate     = base64decode(module.talos_cluster.kubeconfig.kubernetes_client_configuration.client_certificate)
+#     client_key             = base64decode(module.talos_cluster.kubeconfig.kubernetes_client_configuration.client_key)
+#     cluster_ca_certificate = base64decode(module.talos_cluster.kubeconfig.kubernetes_client_configuration.ca_certificate)
 #   }
 # }
 # 
