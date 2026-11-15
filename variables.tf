@@ -28,3 +28,9 @@ variable "physical_interface" {
   description = "Physical network interface name on the Proxmox node"
   default     = "eno1"
 }
+
+variable "ubuntu_ssh_keys" {
+  type        = list(string)
+  description = "SSH public keys for Ubuntu VM user account"
+  default     = []
+}

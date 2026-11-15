@@ -216,6 +216,13 @@ resource "proxmox_virtual_environment_network_linux_vlan" "this" {
 #   bios      = "ovmf"
 # 
 #   stop_on_destroy = true
+#
+#   lifecycle {
+#     precondition {
+#       condition     = length(var.ubuntu_ssh_keys) > 0
+#       error_message = "At least one SSH public key must be provided in ubuntu_ssh_keys for the Ubuntu VM."
+#     }
+#   }
 # 
 #   cpu {
 #     cores = 12
@@ -273,7 +280,7 @@ resource "proxmox_virtual_environment_network_linux_vlan" "this" {
 #   initialization {
 #     user_account {
 #       username = "ubuntu"
-#       password = "ubuntu"
+#       keys     = var.ubuntu_ssh_keys
 #     }
 #     ip_config {
 #       ipv4 {
