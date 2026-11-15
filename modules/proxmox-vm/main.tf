@@ -53,15 +53,25 @@ resource "proxmox_virtual_environment_vm" "this" {
   }
 
   initialization {
-    ip_config {
-      ipv4 {
-        address = "dhcp"
+    dynamic "ip_config" {
+      for_each = var.network_bridges
+      content {
+        ipv4 {
+          address = ip_config.key < length(var.ip_configs) ? var.ip_configs[ip_config.key].ipv4_address : (
+            ip_config.key == 0 ? "dhcp" : format("%s/%s", cidrhost(var.subnet_cidr, count.index + var.ip_offset), split("/", var.subnet_cidr)[1])
+          )
+          gateway = ip_config.key < length(var.ip_configs) ? try(var.ip_configs[ip_config.key].ipv4_gateway, null) : null
+        }
       }
     }
-    ip_config {
-      ipv4 {
-        address = format("%s/%s", cidrhost(var.subnet_cidr, count.index + var.ip_offset), split("/", var.subnet_cidr)[1])
-      }
+  }
+
+  lifecycle {
+    precondition {
+      condition = var.vm_count <= 1 || alltrue([
+        for config in var.ip_configs : config.ipv4_address == "dhcp"
+      ])
+      error_message = "ip_configs の明示的な固定 IPv4 アドレスは vm_count = 1 の場合のみ指定できます。複数 VM では DHCP または subnet_cidr と ip_offset による自動割り当てを使用してください。"
     }
   }
 
