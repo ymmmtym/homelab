@@ -18,8 +18,8 @@ variable "vlan_id" {
   default     = 100
 
   validation {
-    condition     = var.vlan_id >= 1 && var.vlan_id <= 4094
-    error_message = "VLAN ID must be between 1 and 4094."
+    condition     = var.vlan_id >= 1 && var.vlan_id <= 4094 && var.vlan_id == floor(var.vlan_id)
+    error_message = "VLAN ID must be an integer between 1 and 4094."
   }
 }
 
