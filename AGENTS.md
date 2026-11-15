@@ -40,6 +40,24 @@ Proxmox VE 上の Talos Linux クラスタを Terraform で管理するインフ
 - クラスタのIPアドレス・MACアドレスを外部公開しない
 - 重要な判断を独断で進めない。必ず確認を求める
 
+## Secrets
+
+Proxmox API トークンなどのシークレットは、リポジトリ内のファイル（`mise.local.toml` を含む）に保存しないでください。
+1Password CLI や direnv など外部のシークレット管理から環境変数として注入します。
+
+| Variable | Description |
+|---|---|
+| `PROXMOX_VE_API_TOKEN` | Proxmox API トークン（`user@realm!tokenid=secret` 形式） |
+
+例: direnv + 1Password CLI を使う場合
+
+```bash
+# .envrc（gitignore 済み）
+export PROXMOX_VE_API_TOKEN="$(op read 'op://homelab/proxmox/api-token')"
+```
+
+`mise.local.toml.example` はツール設定のみのテンプレートです。シークレットは記載しないでください。
+
 ## Workflow
 
 - 変更前に既存ファイルの内容を確認する

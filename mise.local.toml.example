@@ -1,0 +1,14 @@
+# mise.local.toml - ローカル環境設定（DO NOT COMMIT）
+#
+# シークレット（Proxmox API トークン等）はこのファイルに書かないでください。
+# 1Password CLI や direnv など、外部のシークレット管理から環境変数として注入します。
+#
+# 例: direnv + 1Password CLI を使う場合
+#   .envrc（gitignore 済み）に以下を記述して `direnv allow` を実行する
+#     export PROXMOX_VE_API_TOKEN="$(op read 'op://homelab/proxmox/api-token')"
+#
+# 例: シェルのプロファイルや CI のシークレット機能から設定する場合も、
+#     トークン文字列を直接ファイルに書かず、シークレットストアから読み出す
+#      export PROXMOX_VE_API_TOKEN="$(op read 'op://homelab/proxmox/api-token')"
+#
+# このファイルにはツール設定のみを記載し、シークレットは含めない
