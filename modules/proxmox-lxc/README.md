@@ -99,7 +99,8 @@ module "gpu_container" {
 - `disk_size` - ディスクサイズ（GB）（デフォルト: 8）
 - `features_nesting` - ネスティング有効化（Docker用）（デフォルト: false）
 - `unprivileged` - 非特権コンテナ（デフォルト: true）
-- `mount_points` - 追加マウントポイント（GPU passthrough等）（デフォルト: []）
+- `mount_points` - ストレージボリュームの追加マウント（`volume` / `mp`）（デフォルト: []）
+- `device_passthroughs` - デバイスパススルー（GPU等、`path` / `uid` / `gid` / `mode`）（デフォルト: []）
 
 詳細は`variables.tf`を参照してください。
 
@@ -108,7 +109,7 @@ module "gpu_container" {
 GPU Passthroughを使用する場合:
 
 1. **特権コンテナが必要**: `unprivileged = false`
-2. **デバイスをマウント**: `mount_points`でGPUデバイスを指定
+2. **デバイスをマウント**: `device_passthroughs` でGPUデバイスを指定
 3. **Proxmoxホスト側の設定**:
    ```bash
    # /dev/dri/renderD128 のパーミッション確認
