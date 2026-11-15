@@ -16,6 +16,11 @@ variable "vlan_id" {
   type        = number
   description = "VLAN ID for the management network"
   default     = 100
+
+  validation {
+    condition     = var.vlan_id >= 1 && var.vlan_id <= 4094 && var.vlan_id == floor(var.vlan_id)
+    error_message = "VLAN ID must be an integer between 1 and 4094."
+  }
 }
 
 variable "physical_interface" {
