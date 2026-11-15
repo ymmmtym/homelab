@@ -9,17 +9,25 @@ tasks:
       - tc
     cmds:
       - |
-        if ! terraform output -json talosconfig >/dev/null 2>&1; then
-          echo "Error: 'talosconfig' output is not available."
-          echo "Uncomment the talos_cluster module and its outputs in main.tf to enable this task."
+        set -eu
+        tmp_json=$(mktemp)
+        tmp_err=$(mktemp)
+        tmp_yaml=$(mktemp "{{.TALOSCONFIG}}.XXXXXX")
+        trap 'rm -f "$tmp_json" "$tmp_err" "$tmp_yaml"' EXIT
+
+        if ! terraform output -json talosconfig >"$tmp_json" 2>"$tmp_err"; then
+          echo "Error: failed to read the 'talosconfig' output from Terraform." >&2
+          sed 's/^/  /' "$tmp_err" >&2
+          echo "If the output is not defined, uncomment the talos_cluster module and its outputs in main.tf." >&2
           exit 1
         fi
-        terraform output -json talosconfig | yq '.talos_config' > {{.TALOSCONFIG}}
-    sources:
-      - ./*.tf
-    generates:
-      - "{{.TALOSCONFIG}}"
-    method: timestamp
+
+        if ! yq -e '.talos_config' "$tmp_json" >"$tmp_yaml"; then
+          echo "Error: the 'talosconfig' output does not contain a talos_config value." >&2
+          exit 1
+        fi
+
+        mv "$tmp_yaml" "{{.TALOSCONFIG}}"
 
   kubeconfig:update:
     aliases:
@@ -29,17 +37,22 @@ tasks:
       - talosconfig:get
     cmds:
       - |
+        set -eu
         if [ ! -f "{{.TALOSCONFIG}}" ]; then
-          echo "Error: {{.TALOSCONFIG}} not found. Run 'task tc' first."
+          echo "Error: {{.TALOSCONFIG}} not found. Run 'task tc' first." >&2
           exit 1
         fi
-      - talosctl config endpoints "{{.CONTROL_PLANE_IP}}"
-      - talosctl kubeconfig --nodes "{{.CONTROL_PLANE_IP}}"
+
+        control_plane_ip=$(yq eval '.contexts.cluster.endpoints[0]' "{{.TALOSCONFIG}}")
+        if [ -z "$control_plane_ip" ] || [ "$control_plane_ip" = "null" ]; then
+          echo "Error: failed to read the control plane endpoint from {{.TALOSCONFIG}}." >&2
+          exit 1
+        fi
+
+        talosctl config endpoints "$control_plane_ip"
+        talosctl kubeconfig --nodes "$control_plane_ip"
     env:
       TALOSCONFIG: "{{.TALOSCONFIG}}"
-    vars:
-      CONTROL_PLANE_IP:
-        sh: yq eval '.contexts.cluster.endpoints[0]' {{.TALOSCONFIG}}
 
   terraform:taint:vms:
     aliases:
