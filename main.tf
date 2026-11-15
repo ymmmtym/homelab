@@ -57,8 +57,7 @@ resource "proxmox_virtual_environment_network_linux_vlan" "this" {
 #   talos_image_filename = "talos-v1.10.6-amd64.raw"
 # 
 #   ip_configs = [
-#     { ipv4_address = "dhcp" },
-#     { ipv4_address = "${local.subnet_cidr}" }
+#     { ipv4_address = "dhcp" }
 #   ]
 # }
 

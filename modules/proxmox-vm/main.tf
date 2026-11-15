@@ -66,5 +66,14 @@ resource "proxmox_virtual_environment_vm" "this" {
     }
   }
 
+  lifecycle {
+    precondition {
+      condition = var.vm_count <= 1 || alltrue([
+        for config in var.ip_configs : config.ipv4_address == "dhcp"
+      ])
+      error_message = "ip_configs の明示的な固定 IPv4 アドレスは vm_count = 1 の場合のみ指定できます。複数 VM では DHCP または subnet_cidr と ip_offset による自動割り当てを使用してください。"
+    }
+  }
+
   tags = var.tags
 }

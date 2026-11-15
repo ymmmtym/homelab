@@ -61,7 +61,7 @@ variable "ip_configs" {
     ipv4_address = string
     ipv4_gateway = optional(string)
   }))
-  description = "IP configurations per network interface (one entry per interface)"
+  description = "IP configurations per network interface (one entry per interface); explicit static addresses require vm_count = 1"
   default     = []
 }
 
