@@ -7,7 +7,8 @@
 #   .envrc（gitignore 済み）に以下を記述して `direnv allow` を実行する
 #     export PROXMOX_VE_API_TOKEN="$(op read 'op://homelab/proxmox/api-token')"
 #
-# 例: シェルのプロファイルで設定する場合
-#     export PROXMOX_VE_API_TOKEN="root@pam!terraform=<secret>"
+# 例: シェルのプロファイルや CI のシークレット機能から設定する場合も、
+#     トークン文字列を直接ファイルに書かず、シークレットストアから読み出す
+#      export PROXMOX_VE_API_TOKEN="$(op read 'op://homelab/proxmox/api-token')"
 #
 # このファイルにはツール設定のみを記載し、シークレットは含めない
