@@ -2,6 +2,9 @@
 talosctl = "latest"
 terraform = "latest"
 flux2 = "latest"
+k9s = "latest"
+kubectl = "latest"
+kubectx = "latest"
 
 [env]
 TALOSCONFIG = "./talosconfig"
