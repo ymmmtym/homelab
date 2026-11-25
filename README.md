@@ -71,6 +71,8 @@ terraform apply
 5. `terraform apply` を再実行し、VM とクラスタを作成する
 6. `task kubeconfig` を実行する
 
+**注意:** 手順5で作成されるクラスタは、`talos-config/default.yaml.tftpl` で `cni: none`、`proxy.disabled: true` が設定され、`main.tf` の Cilium リリースもコメントアウトされたままです。そのため、kubeconfig を取得しても Pod ネットワークと Service 通信は利用できず、ワークロードは実行できません。Cilium を有効化するまで、クラスタをワークロードに使用しないでください。
+
 `ip_offset` の既定値（11）は、手順2で有効化する `controlplane_ips`（11〜13）と `worker_ips`（14〜16）の割り当てに一致します。
 
 ### 4. Talos/Kubeconfig取得
