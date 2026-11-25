@@ -51,11 +51,27 @@ terraform apply
 
 現状の `main.tf` ではネットワークのみが作成されます。Talos VMやクラスタも作成する場合は、次の手順で有効化してください。
 
-1. `modules/proxmox-vm` を利用する `talos_vms` モジュールブロックを `main.tf` に追加する（現在は存在しません）
+1. `modules/proxmox-vm` を利用する `talos_vms` モジュールブロックを `main.tf` に追加する（現在は存在しません）。`vm_count` と `subnet_cidr` は必須です
+
+   ```hcl
+   module "talos_vms" {
+     source = "./modules/proxmox-vm"
+
+     node_name            = local.node_name
+     vm_count             = 6
+     subnet_cidr          = local.subnet_cidr
+     talos_image_url      = local.talos_image_url
+     talos_image_filename = "talos-${var.talos_image_version}-amd64.raw"
+   }
+   ```
+
 2. `controlplane_ips` / `worker_ips` の `locals` をコメント解除する
 3. `talos_cluster` モジュールと `talosconfig` / `kubeconfig` output をコメント解除する
-4. `terraform apply` を再実行し、VM とクラスタを作成する
-5. `task kubeconfig` を実行する
+4. `terraform init` を再実行し、追加したモジュールをインストールする
+5. `terraform apply` を再実行し、VM とクラスタを作成する
+6. `task kubeconfig` を実行する
+
+`ip_offset` の既定値（11）は、手順2で有効化する `controlplane_ips`（11〜13）と `worker_ips`（14〜16）の割り当てに一致します。
 
 ### 4. Talos/Kubeconfig取得
 
