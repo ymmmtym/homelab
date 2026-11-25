@@ -49,7 +49,13 @@ terraform init
 terraform apply
 ```
 
-現状の `main.tf` ではネットワークのみが作成されます。Talos VMやクラスタも作成する場合は、`main.tf` のコメントアウトされたモジュールを有効化してください。
+現状の `main.tf` ではネットワークのみが作成されます。Talos VMやクラスタも作成する場合は、次の手順で有効化してください。
+
+1. `modules/proxmox-vm` を利用する `talos_vms` モジュールブロックを `main.tf` に追加する（現在は存在しません）
+2. `controlplane_ips` / `worker_ips` の `locals` をコメント解除する
+3. `talos_cluster` モジュールと `talosconfig` / `kubeconfig` output をコメント解除する
+4. `terraform apply` を再実行し、VM とクラスタを作成する
+5. `task kubeconfig` を実行する
 
 ### 4. Talos/Kubeconfig取得
 
@@ -57,7 +63,7 @@ terraform apply
 task kubeconfig
 ```
 
-`talos_cluster` モジュールと `talosconfig` / `kubeconfig` output がコメントアウトされているため、有効化するまでこのタスクは失敗します。
+`talos_cluster` モジュールと `talosconfig` / `kubeconfig` output がコメントアウトされているため、上記の手順で有効化して `terraform apply` を完了するまでこのタスクは失敗します。
 
 ## タスク
 
