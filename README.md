@@ -4,12 +4,14 @@ Proxmox VE上にTalos LinuxベースのKubernetesクラスタを構築するTerr
 
 ## 概要
 
-このリポジトリは、Proxmox Virtual Environment上に6台のVMを作成し、Talos Linuxを使用してKubernetesクラスタを自動構築します。
+このリポジトリは、Proxmox Virtual Environment上にTalos LinuxベースのKubernetesクラスタを構築するためのTerraformプロジェクトです。
+
+現在の `main.tf` で有効なのは、クラスタ用ネットワーク（VLAN 100 / vmbr100）の作成のみです。Talos VM、Talosクラスタ、Cilium、Fluxなどは、モジュールまたはコメントアウトされたコードとして用意されています。
 
 - Control Plane: 3台
 - Worker: 3台
-- CNI: Cilium
-- GitOps: Flux
+- CNI: Cilium（`main.tf` ではコメントアウト）
+- GitOps: Flux（`main.tf` ではコメントアウト）
 
 ## 構成
 
@@ -17,8 +19,8 @@ Proxmox VE上にTalos LinuxベースのKubernetesクラスタを構築するTerr
 - **Talos Linux**: Kubernetesに特化したOS (v1.10.6)
 - **Terraform**: インフラ管理
 - **Terraform Cloud**: リモートバックエンド
-- **Cilium**: Kubernetes CNI
-- **Flux**: GitOps継続的デリバリー
+- **Cilium**: Kubernetes CNI（`main.tf` ではコメントアウト）
+- **Flux**: GitOps継続的デリバリー（`main.tf` ではコメントアウト）
 
 ## 前提条件
 
@@ -47,11 +49,15 @@ terraform init
 terraform apply
 ```
 
+現状の `main.tf` ではネットワークのみが作成されます。Talos VMやクラスタも作成する場合は、`main.tf` のコメントアウトされたモジュールを有効化してください。
+
 ### 4. Talos/Kubeconfig取得
 
 ```bash
 task kubeconfig
 ```
+
+`talos_cluster` モジュールと `talosconfig` / `kubeconfig` output がコメントアウトされているため、有効化するまでこのタスクは失敗します。
 
 ## タスク
 
@@ -71,11 +77,20 @@ Taskfileで定義されている便利なコマンド:
 
 ## VMスペック
 
+`modules/proxmox-vm` の既定値:
+
 - CPU: 4コア (x86-64-v2-AES)
 - メモリ: 4GB
 - ディスク1: 100GB (システム)
 - ディスク2: 20GB (データ)
 - ネットワーク: 2インターフェース (vmbr0, vmbr100)
+
+## セキュリティ
+
+- `talosconfig` にはCA証明書・クライアント証明書・秘密鍵が含まれます。リポジトリにコミットしないでください。
+- `task tc` はリポジトリ直下に `talosconfig` を生成しますが、`.gitignore` で除外されています。誤ってステージしていないか `git status` で確認してください。
+- 誤ってコミットした場合は、履歴から削除するだけでなく、Talosの認証情報を再生成してください。
+- Proxmox API トークンなどのシークレットは環境変数から注入し、リポジトリ内のファイル（`mise.local.toml` を含む）に保存しないでください。
 
 ## ライセンス
 

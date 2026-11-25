@@ -88,3 +88,4 @@ mise.local.toml
 ### talos ###
 # General
 talosconfig
+talosconfig.*
